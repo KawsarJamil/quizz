@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizz/quiz_brain.dart';
 
 void main() {
   runApp(Myapp());
@@ -25,14 +26,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> widz = [];
-  List<String> qsn = [
-    "It's the correct spelling of 'one'?",
-    "It's the correct spelling of 'tow'?",
-    "It's the correct spelling of 'three'?",
-    "It's the correct spelling of 'foor'?",
-  ];
-  List<bool> ans = [true, false, true, false];
+  Quizbrain quizbrain = Quizbrain();
+
   int num = 0;
   bool t = false;
   @override
@@ -41,108 +36,116 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                "Total:${quizbrain.netnum()}  Right:${quizbrain.checkcount}  Wrong:${quizbrain.closecount}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    // quizbrain.qsnbank[num].qsn!,
+                    quizbrain.Getqsntxt()!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        bool temp = quizbrain.Getqsnans()!;
+                        setState(() {
+                          quizbrain.checkiconad(temp);
+                        });
+                      },
+                      child: Text(
+                        "True",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.all(25),
+                        primary: Colors.green,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        bool temp = quizbrain.Getqsnans()!;
+                        setState(() {
+                          quizbrain.closeiconad(temp);
+                        });
+                      },
+                      child: Text(
+                        "False",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.all(25),
+                        primary: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    quizbrain.restart();
+                  });
+                },
                 child: Text(
-                  qsn[num],
-                  textAlign: TextAlign.center,
+                  "Restart",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 28,
+                    fontSize: 20,
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    bool temp = ans[num];
-                    setState(() {
-                      if (num < 4 && t == false) {
-                        widz.add(
-                          Icon(
-                            temp == true ? Icons.check : Icons.close,
-                            color: temp == true ? Colors.green : Colors.red,
-                          ),
-                        );
-                      }
-                      if (num < 3) {
-                        num++;
-                      }
-                      // else {
-                      //   t = true;
-                      // }
-                    });
-                  },
-                  child: Text(
-                    "True",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(25),
-                    primary: Colors.green,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    bool temp = ans[num];
-                    setState(() {
-                      if (t == false && num == 3) {
-                        t = true;
-                        widz.add(
-                          Icon(
-                            temp == false ? Icons.check : Icons.close,
-                            color: temp == false ? Colors.green : Colors.red,
-                          ),
-                        );
-                      }
-                      if (num < 3) {
-                        num++;
-                        widz.add(
-                          Icon(
-                            temp == false ? Icons.check : Icons.close,
-                            color: temp == false ? Colors.green : Colors.red,
-                          ),
-                        );
-                      }
-                    });
-                  },
-                  child: Text(
-                    "False",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(25),
-                    primary: Colors.red,
-                  ),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(25),
+                  primary: Colors.white,
                 ),
               ),
             ),
             Wrap(
-              children: widz,
+              children: quizbrain.widz,
             ),
           ],
         ),
